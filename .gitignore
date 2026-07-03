@@ -21,6 +21,7 @@
 **/.pytest_cache/
 **/.testmon/
 **/.testmondata
+**/.tmontmp/
 **/*.pyc
 **/*.pb
 

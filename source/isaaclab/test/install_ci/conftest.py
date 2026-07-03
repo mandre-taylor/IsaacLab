@@ -27,6 +27,19 @@ if _THIS_DIR not in sys.path:
 import utils as _utils  # noqa: E402
 from utils import find_isaaclab_root, run_cmd  # noqa: E402, F401 – re-exported for tests
 
+_REPO_ROOT = find_isaaclab_root()
+_TOOLS_DIR = str(_REPO_ROOT / "tools")
+if _TOOLS_DIR not in sys.path:
+    sys.path.insert(0, _TOOLS_DIR)
+
+from testmon_subprocess_coverage import (  # noqa: E402, F401
+    pytest_runtest_makereport,
+    pytest_runtest_setup,
+    pytest_runtest_teardown,
+    pytest_sessionfinish,
+    pytest_sessionstart,
+)
+
 _CYAN_BRIGHT = "\033[96m"
 _RESET = "\033[0m"
 
@@ -134,6 +147,14 @@ def pytest_runtest_logreport(report: pytest.TestReport) -> None:
     """Print a newline after the PASSED/FAILED/SKIPPED result."""
     if report.when == "call" or (report.when == "setup" and report.skipped):
         sys.stdout.write("\n")
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_ignore_collect(collection_path: Path, config: pytest.Config) -> bool | None:
+    """Let item-level selection preserve smoke tests."""
+    if config.getoption("testmon_forceselect", default=False) and collection_path:
+        return False
+    return None
 
 
 @pytest.hookimpl(wrapper=True, tryfirst=True)
