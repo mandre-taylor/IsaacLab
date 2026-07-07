@@ -15,9 +15,10 @@ concurrency:
 
 jobs:
   license-check:
-    # Fork PRs cannot access NGC_API_KEY, so they cannot resolve the immutable
-    # OVPhysX wheel required by the development extras.
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    # Fork repositories cannot access the upstream NGC_API_KEY.
+    if: >-
+      github.repository == 'isaac-sim/IsaacLab' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     env:
       NGC_API_KEY: ${{ secrets.NGC_API_KEY }}
