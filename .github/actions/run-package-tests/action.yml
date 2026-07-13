@@ -41,6 +41,12 @@ inputs:
       skipped. Combines with filter-pattern (include + exclude).
     default: ''
     required: false
+  test-k-expr:
+    description: >-
+      Global pytest -k expression applied inside every per-file pytest run
+      spawned by tools/conftest.py (combined with device-split selectors).
+    default: ''
+    required: false
   shard-index:
     description: 'Zero-based shard index'
     default: ''
@@ -286,6 +292,7 @@ runs:
         pytest-options: ${{ inputs.pytest-options }}
         filter-pattern: ${{ inputs.filter-pattern }}
         exclude-pattern: ${{ inputs.exclude-pattern }}
+        test-k-expr: ${{ inputs.test-k-expr }}
         shard-index: ${{ inputs.shard-index }}
         shard-count: ${{ inputs.shard-count }}
         curobo-only: ${{ inputs.curobo-only }}
@@ -298,6 +305,17 @@ runs:
         wheelhouse-host-dir: ${{ steps.extract-wheelhouse.outputs.wheelhouse_host_dir }}
         wheelhouse-packages: ${{ inputs.wheelhouse-packages }}
         omni-github-test-type: ${{ inputs.omni-github-test-type }}
+
+    - name: Upload test results
+      if: always()
+      uses: ./.github/actions/upload-junit-results
+      with:
+        junit-file: reports/${{ github.job }}-report.xml
+        artifact-name: junit-${{ inputs.container-name }}-${{ github.run_id }}-${{ github.run_attempt }}
+        artifact-prefix: pytest-results-${{ github.job }}-${{ inputs.container-name }}-${{ github.run_id }}-${{ github.run_attempt }}
+        comparison-images-path: reports/comparison-images/
+        comparison-images-artifact-name: comparison-images-${{ inputs.container-name }}-${{ github.run_id }}-${{ github.run_attempt }}
+        test-type: ${{ inputs.omni-github-test-type }}
 
     - name: Check Test Results
       if: always()

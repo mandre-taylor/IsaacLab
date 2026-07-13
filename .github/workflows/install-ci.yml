@@ -55,6 +55,7 @@ jobs:
             $'^apps/\tStandalone apps'
             $'^tools/\tBuild tooling'
             $'^source/\tLibrary source code'
+            $'^tests/integration/\tIntegration test source code'
             $'^\\.github/actions/run-package-tests/\tTest action'
             $'^\\.github/actions/install-ci-(collect|run)/\tInstall-ci composite actions'
             $'^\\.github/workflows/install-ci\\.yml$\tThis workflow file'
@@ -142,6 +143,14 @@ jobs:
         with:
           base-image: ${{ inputs.base_image || 'ubuntu:24.04' }}
           test-filter: ${{ inputs.test_filter }}
+      - name: Upload test results
+        if: always()
+        uses: ./.github/actions/upload-junit-results
+        with:
+          junit-file: ${{ github.workspace }}/results/results.xml
+          artifact-name: install-ci-junit-${{ runner.arch }}
+          artifact-prefix: pytest-results-${{ github.job }}-${{ runner.arch }}
+          test-type: installation-e2e
 
   install-tests-arm:
     name: Installation Tests (ARM)
@@ -161,3 +170,11 @@ jobs:
         with:
           base-image: ${{ inputs.base_image || 'ubuntu:24.04' }}
           test-filter: ${{ inputs.test_filter }}
+      - name: Upload test results
+        if: always()
+        uses: ./.github/actions/upload-junit-results
+        with:
+          junit-file: ${{ github.workspace }}/results/results.xml
+          artifact-name: install-ci-junit-${{ runner.arch }}
+          artifact-prefix: pytest-results-${{ github.job }}-${{ runner.arch }}
+          test-type: installation-e2e

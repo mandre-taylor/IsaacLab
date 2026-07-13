@@ -1,7 +1,7 @@
 [package]
 
 # Note: Semantic Versioning is used: https://semver.org/
-version = "8.0.2"
+version = "9.0.0"
 
 # Description
 title = "Isaac Lab framework for Robot Learning"
@@ -14,6 +14,9 @@ keywords = ["kit", "robotics", "learning", "ai"]
 [python.pipapi]
 requirements = [
     "numpy",
+    "torch>=2.10",
+    "warp-lang",
+    "scipy>=1.10",
     "prettytable==3.3.0",
     "toml",
     "lazy_loader>=0.4",
@@ -25,6 +28,9 @@ requirements = [
 
 modules = [
     "numpy",
+    "torch",
+    "warp",
+    "scipy",
     "prettytable",
     "toml",
     "lazy_loader",
