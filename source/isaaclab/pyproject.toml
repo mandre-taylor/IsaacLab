@@ -19,6 +19,7 @@ requires-python = ">=3.12"
 dependencies = [
     # generic
     "numpy>=2",
+    "scipy>=1.10",
     "torch>=2.10",
     "onnx>=1.18.0",
     "prettytable>=3.3.0",
