@@ -11,9 +11,14 @@ can carry them into the uploaded test artifact.
 Level markers (``unit`` / ``integration`` / ``benchmark``) are applied per file via a module-level ``pytestmark``
 and registered in the repo-root ``pyproject.toml``. Select them with the standard ``-m`` syntax,
 e.g. ``pytest -m unit source/isaaclab/test`` or ``pytest -m "not unit" source/isaaclab/test``.
+
+Also loads ``tools/hang_dump.py``, which lets the CI runner ask this process for a stack dump before it
+kills it for hanging.
 """
 
 from __future__ import annotations
+
+pytest_plugins = ["tools.hang_dump"]
 
 
 def pytest_collection_modifyitems(config, items):
