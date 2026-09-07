@@ -95,7 +95,8 @@ token per instance; markers without that ownership information remain shared.
    ``rtx.scenedb.plugin`` logs ``SceneDbContext : Maximum number of scene partitions
    (15625) reached. Additional scene partitions will be discarded.`` Environments beyond
    that count then share a partition with another environment, so their tiled camera views
-   can show another environment's geometry. See
+   can show another environment's geometry. This cap comes from the shared ``rtx.scenedb.plugin``
+   and applies to OVRTX as well, which cannot opt out of partitioning to avoid it. See
    :ref:`known-issues-scene-partition-count-cap` for details.
 
 Architecture Overview
